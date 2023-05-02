@@ -111,7 +111,6 @@ loc_reduc_bilan = loc_reduc_bilan[['id', 'reductions_scope_1_2', 'reductions_sco
        'reductions_scope_3']].melt(id_vars='id')
 
 loc_reduced_emission = loc_reduc_bilan.value.sum()
-print(f'Ratio of reduced emission: {loc_reduced_emission/loc_total_emissions:.2f} %')
 
 loc_chart_reduced_emission = alt.Chart(loc_reduc_bilan).mark_bar().encode(
         x=alt.X('variable:N'),
