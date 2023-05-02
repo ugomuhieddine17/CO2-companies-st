@@ -67,11 +67,12 @@ dico_postes, dico_postes_to_scopes, df_assess, df_emissions, df_postes, df_scope
 ####           MAIN PAGE           ####
 #######################################
 
+
 # Set header title
-st.title('French organisations CO2 consideration')
+st.title('Comprendre les BEGES des organisations françaises')
 
 selected_organization_name = st.selectbox(
-    'Organisation to observe',
+    'Qui observer ?',
     list(df_assess.organization_name.unique())
     )
 
@@ -102,10 +103,6 @@ loc_total_emissions = loc_emission.total.sum()
 loc_reduc_bilan = df_reduction_bilan[df_reduction_bilan.id == loc_assess_id].copy()
 loc_has_plan = loc_reduc_bilan.action_plan.values[0] == 'Oui'
 
-if loc_has_plan:
-    txt_plan = '**green[Has a plan]**'
-else:
-    txt_plan = '**red[Has NOT a plan]**'
 
 loc_reduc_bilan = loc_reduc_bilan[['id', 'reductions_scope_1_2', 'reductions_scope_1', 'reductions_scope_2',
        'reductions_scope_3']].melt(id_vars='id')
@@ -121,24 +118,24 @@ loc_chart_reduced_emission = alt.Chart(loc_reduc_bilan).mark_bar().encode(
                 )
 
 ## MARKDOWN PLOT
-st.markdown(f"## :blue[General information]")
+st.markdown(f"## :blue[Informations générales]")
 st.markdown(f"{loc_info.organization_description.values[0]}")
-st.markdown(f"#### Size \n {loc_info.staff.values[0]:.0f} collaborators")
-st.markdown(f"#### Reporting year \n {loc_reporting_year}")
+st.markdown(f"#### Taille \n {loc_info.staff.values[0]:.0f} collaborators")
+st.markdown(f"#### Année de reporting \n {loc_reporting_year}")
 st.divider() 
-st.markdown(f"## :blue[CO2 description]")
+st.markdown(f"## :blue[Description BEGES]")
 if loc_has_plan:
-    st.markdown('### :green[Has a plan]')
+    st.markdown('### :green[L\'organisation possède un plan de transition]')
 else:
-    st.markdown('### :red[Has NOT a plan]')
+    st.markdown('### :red[L\'organisation ne possède PAS un plan de transition]')
 
 if (loc_reduced_emission/loc_total_emissions) < 0.1:
-    st.markdown(f"#### Ratio of reduced emission \n **:red[{(loc_reduced_emission/loc_total_emissions)*100:.2f} %]**")
+    st.markdown(f"#### Ratio d'émissions réduites \n **:red[{(loc_reduced_emission/loc_total_emissions)*100:.2f} %]**")
 
 else:
-    st.markdown(f"#### Ratio of reduced emission \n **:green[{(loc_reduced_emission/loc_total_emissions)*100:.2f} %]**")
+    st.markdown(f"#### Ratio d'émissions réduites \n **:green[{(loc_reduced_emission/loc_total_emissions)*100:.2f} %]**")
 
-st.markdown(f" _Source of report {loc_info.source_url.values[0]}_ ")
+st.markdown(f" _Source du rapport {loc_info.source_url.values[0]}_ ")
 
 st.altair_chart(loc_chart_poste_emission, use_container_width=True)
 st.divider() 
@@ -148,10 +145,10 @@ st.divider()
 loc_description  = df_descriptions[df_descriptions.assessment_id == loc_assess_id].copy()
 loc_description_potentiel = loc_description.key.tolist()
 
-st.markdown(f'''## :blue[Methodology]''')
+st.markdown(f'''## :blue[Méthodologie]''')
 
 selected_descrip = st.selectbox(
-    'Methodology to check',
+    'Quelle méthodologie observer ?',
     loc_description_potentiel
     )
 loc_descrip_to_print = loc_description[loc_description.key == selected_descrip].value.values[0]
